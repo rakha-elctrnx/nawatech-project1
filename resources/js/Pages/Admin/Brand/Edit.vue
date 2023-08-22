@@ -10,6 +10,7 @@ const form = useForm({
   brand_name: data.brand_name,
   company_name: data.company_name,
   logo: null, // File object
+  _method: 'patch'
 });
 
 const handleSubmit = () => {
@@ -70,7 +71,7 @@ const handleLogoChange = (event) => {
                                 <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                                     <div class="col-span-3 mt-5">
                                         <label for="thumbnail"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Thumbnail</label>
+                                            class="block text-sm font-medium leading-6 text-gray-900">Logo</label>
                                         <div class="flex items-center justify-center w-full mt-2">
                                             <label for="dropzone-file"
                                                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">

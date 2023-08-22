@@ -85,6 +85,9 @@ watch(() => usePage().props.errors, (errors) => {
                                 <NavLink :href="route('admin.brand')" :active="route().current('admin.brand')">
                                     Brand
                                 </NavLink>
+                                <NavLink :href="route('admin.product')" :active="route().current('admin.product')">
+                                    Product
+                                </NavLink>
                             </div>
                         </div>
 

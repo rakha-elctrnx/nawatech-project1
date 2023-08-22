@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -27,10 +28,6 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth', 'verified')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -41,14 +38,27 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::controller(AdminController::class)->prefix('admin')->name('admin.')->middleware('auth', 'verified')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/brand', 'brand')->name('brand');
-    Route::get('/brand/add', 'addBrand')->name('addBrand');
-    Route::post('/brand/store', 'storeBrand')->name('storeBrand');
-    Route::get('/brand/edit/{brand_id}', 'editBrand')->name('editBrand');
-    Route::post('/brand/update/{brand_id}', 'updateBrand')->name('updateBrand');
-    Route::delete('/brand/delete/{brand_id}', 'deleteBrand')->name('deleteBrand');
+Route::prefix('admin')->name('admin.')->middleware('auth', 'verified')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::controller(BrandController::class)->prefix('brand')->group(function () {
+        Route::get('/', 'index')->name('brand');
+        Route::get('/add', 'create')->name('addBrand');
+        Route::post('/store', 'store')->name('storeBrand');
+        Route::get('/edit/{brand_id}', 'edit')->name('editBrand');
+        Route::patch('/update/{brand_id}', 'update')->name('updateBrand');
+        Route::delete('/delete/{brand_id}', 'destroy')->name('deleteBrand');
+    });
+    Route::controller(ProductController::class)->prefix('product')->group(function () {
+        Route::get('/', 'index')->name('product');
+        Route::get('/add', 'create')->name('addProduct');
+        Route::post('/store', 'store')->name('storeProduct');
+        Route::get('/edit/{product_id}', 'edit')->name('editProduct');
+        Route::patch('/update/{product_id}', 'update')->name('updateProduct');
+        Route::post('/store-type/{product_id}', 'storeType')->name('storeType');
+        Route::post('/update-type/{type_id}', 'updateType')->name('updateType');
+        Route::post('/store-spec/{type_id}', 'storeSpec')->name('storeSpec');
+        Route::delete('/delete-spec/{spec_id}', 'deleteSpec')->name('deleteSpec');
+    });
 });
 
 require __DIR__.'/auth.php';
