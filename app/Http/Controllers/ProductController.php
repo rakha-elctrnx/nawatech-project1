@@ -142,6 +142,53 @@ class ProductController extends Controller
         return Redirect::route('admin.product')->with('success', 'Data edited successfully');
     }
 
+    public function deleteType($type_id): RedirectResponse
+    {
+        $type = Type::find($type_id);
+
+        if(!empty($type->image)){
+            $imagePath = public_path('image/'. $type->image);
+            if(file_exists($imagePath)){
+                unlink($imagePath);
+            }
+        }
+        if ($type->specs->count() > 0) {
+            $type->specs()->delete();
+        }
+        $type->delete();
+
+        return Redirect::back()->with('success', 'Data deleted successfully');
+    }
+
+    public function destroy($product_id): RedirectResponse
+    {
+        $product = Product::find($product_id);
+
+        if(!empty($product->image)){
+            $imagePath = public_path('image/'. $product->image);
+            if(file_exists($imagePath)){
+                unlink($imagePath);
+            }
+        }
+
+        $types = $product->types;
+
+        foreach ($types as $type) {
+            if (!empty($type->image)) {
+                $typeImagePath = public_path('image/' . $type->image);
+                if (file_exists($typeImagePath)) {
+                    unlink($typeImagePath);
+                }
+            }
+            $type->specs()->delete();
+        }
+
+        $product->types()->delete();
+        $product->delete();
+
+        return Redirect::route('admin.product')->with('success', 'Data deleted successfully');
+    }
+
     public function storeSpec(Request $request, $type_id): RedirectResponse
     {
         $validatedData = $request->validate([

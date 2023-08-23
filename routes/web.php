@@ -33,14 +33,14 @@ Route::middleware('auth', 'verified', 'role:2')->group(function () {
 });
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard')->middleware('auth', 'verified', 'role:1');
 
 Route::prefix('admin')->name('admin.')->middleware('auth', 'verified', 'role:1')->group(function () {
 
@@ -58,8 +58,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth', 'verified', 'role:1')
         Route::post('/store', 'store')->name('storeProduct');
         Route::get('/edit/{product_id}', 'edit')->name('editProduct');
         Route::patch('/update/{product_id}', 'update')->name('updateProduct');
+        Route::delete('/delete/{product_id}', 'destroy')->name('deleteProduct');
         Route::post('/store-type/{product_id}', 'storeType')->name('storeType');
         Route::post('/update-type/{type_id}', 'updateType')->name('updateType');
+        Route::delete('/delete-type/{type_id}', 'deleteType')->name('deleteType');
         Route::post('/store-spec/{type_id}', 'storeSpec')->name('storeSpec');
         Route::delete('/delete-spec/{spec_id}', 'deleteSpec')->name('deleteSpec');
     });

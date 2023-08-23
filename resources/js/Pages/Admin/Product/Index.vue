@@ -7,8 +7,8 @@ const page = usePage()
 const data = computed(() => page.props.data)
 
 
-const deleteService = (id) => {
-    // router.delete(route('service.delete', id))
+const handleDeleteProduct = (id) => {
+    router.delete(route('admin.deleteProduct', id))
 }
 
 </script>
@@ -68,7 +68,7 @@ const deleteService = (id) => {
                                     <td class="px-6 py-4">
                                         <Link :href="route('admin.editProduct', item.id)" class="font-medium text-blue-600 hover:underline">Edit</Link>
                                         <span>&nbsp; &nbsp;</span>
-                                        <button type="button" @click="deleteService(item.id)" class="font-medium text-red-600 hover:underline">Delete</button>
+                                        <button type="button" @click="handleDeleteProduct(item.id)" class="font-medium text-red-600 hover:underline">Delete</button>
                                     </td>
                                 </tr>
                                 

@@ -51,6 +51,14 @@ const handleDeleteSpec = (specId) => {
     });
 }
 
+const handleDeleteType = (typeId) => {
+    router.delete(route('admin.deleteType', typeId), {
+        onSuccess: () => {
+            window.location.href = route('admin.editProduct', props.data.product_id);
+        }
+    });
+}
+
 const handleUpdate = () => {
     form.post(route('admin.updateType', props.data.id), {
         onSuccess: () => {
@@ -281,7 +289,7 @@ const handleUpdate = () => {
                     </div>
                 </div>
                 <div class="mt-4 flex items-center justify-end gap-x-2 border-t-2 pt-3">
-                    <button @click="handleSubmit"
+                    <button @click="handleDeleteType(data.id)"
                             class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Delete</button>
                         <button @click="handleUpdate"
                             class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
