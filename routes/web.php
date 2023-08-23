@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -19,13 +20,16 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::get('/', [GuestController::class, 'index'])->name('home');
+Route::get('/product', [GuestController::class, 'product'])->name('product.index');
+Route::post('/product', [GuestController::class, 'product'])->name('product.index');
+Route::get('/product-detail/{type_id}', [GuestController::class, 'productDetail'])->name('product.detail');
+
+Route::middleware('auth', 'verified', 'role:2')->group(function () {
+    Route::get('/order', [GuestController::class, 'order'])->name('order.index');
+    Route::post('/order/create/{type_id}', [GuestController::class, 'orderCreate'])->name('order.create');
+    Route::get('/order/export', [GuestController::class, 'orderExport'])->name('order.export');
+    Route::delete('/order/cancel/{order_id}', [GuestController::class, 'orderCancel'])->name('order.cancel');
 });
 
 Route::middleware('auth', 'verified')->group(function () {
@@ -38,8 +42,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->name('admin.')->middleware('auth', 'verified')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('index');
+Route::prefix('admin')->name('admin.')->middleware('auth', 'verified', 'role:1')->group(function () {
+
     Route::controller(BrandController::class)->prefix('brand')->group(function () {
         Route::get('/', 'index')->name('brand');
         Route::get('/add', 'create')->name('addBrand');
@@ -60,5 +64,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth', 'verified')->group(fu
         Route::delete('/delete-spec/{spec_id}', 'deleteSpec')->name('deleteSpec');
     });
 });
+
+
 
 require __DIR__.'/auth.php';

@@ -24,6 +24,7 @@ const imagePreview = ref('/image/' + props.data.image);
 
 const handleImageChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     form.image = file;
     if (file) {
         imagePreview.value = URL.createObjectURL(file);
